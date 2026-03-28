@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<!-- saved from url=(0190)file:///C:/Users/Shreya/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/41D70CC4D7C37C7C2128151E84669685A7F7D13C/transfers/2026-13/chemistry_game%20(4).html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐾 CHEM PREDATOR — Hunt or Be Hunted</title>
+<link href="./🐾 CHEM PREDATOR — Hunt or Be Hunted_files/css2" rel="stylesheet">
+<style>
+/* ============================================================
+   ROOT — JUNGLE SURVIVAL PALETTE
+   ============================================================ */
+:root {
+  --void:    #050708;
+  --deep:    #0b0f0d;
+  --pit:     #111a14;
+  --moss:    #1a2e1d;
+  --canopy:  #1e3a22;
+  --fern:    #2d5a34;
+  --venom:   #39ff14;        /* electric poison green */
+  --blood:   #c0392b;
+  --amber:   #e67e22;
+  --bone:    #d4c5a0;
+  --fog:     #8a9e8d;
+  --claw:    #ff6b35;
+  --ice:     #a8edea;
+  --text:    #c8d8c4;
+  --dim:     #5a7060;
+  --border:  rgba(57,255,20,0.18);
+  --glow-g:  0 0 24px rgba(57,255,20,0.35);
+  --glow-r:  0 0 24px rgba(192,57,43,0.5);
+  --glow-a:  0 0 20px rgba(230,126,34,0.4);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  background:var(--void);
+  color:var(--text);
+  font-family:'Oswald',sans-serif;
+  font-size:16px;
+  min-height:100vh;
+  overflow-x:hidden;
+  cursor:crosshair;
+}
+
+/* animated jungle bg */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 100%, rgba(26,46,29,0.8) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 10% 50%, rgba(57,255,20,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 90% 20%, rgba(192,57,43,0.06) 0%, transparent 60%);
+  pointer-events:none;z-index:0;
+}
+
+/* scan lines overlay */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.15) 2px,rgba(0,0,0,0.15) 4px);
+  pointer-events:none;z-index:0;opacity:0.4;
+}
+
+/* ============================================================ LAYOUT */
+.wrap{
+  max-width:740px;
+  margin:0 auto;
+  padding:12px 14px 80px;
+  position:relative;z-index:1;
+}
+
+/* ============================================================ TITLE */
+.title-block{
+  text-align:center;
+  padding:24px 0 18px;
+  position:relative;
+}
+.title-eyebrow{
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.7rem;
+  letter-spacing:6px;
+  color:var(--dim);
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.title-main{
+  font-family:'Creepster',cursive;
+  font-size:clamp(2.2rem,7vw,3.8rem);
+  line-height:1;
+  color:var(--venom);
+  text-shadow: 0 0 30px rgba(57,255,20,0.6), 0 0 60px rgba(57,255,20,0.2);
+  letter-spacing:4px;
+}
+.title-sub{
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.72rem;
+  color:var(--blood);
+  letter-spacing:3px;
+  margin-top:6px;
+  text-transform:uppercase;
+  animation: blink 2s step-end infinite;
+}
+@keyframes blink{ 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ============================================================ THREAT METER */
+.threat-bar-wrap{
+  background:var(--pit);
+  border:1px solid rgba(192,57,43,0.3);
+  border-radius:4px;
+  padding:10px 14px;
+  margin-bottom:14px;
+  position:relative;
+  overflow:hidden;
+}
+.threat-bar-wrap::before{
+  content:'⚠ PREDATOR PROXIMITY';
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.62rem;
+  letter-spacing:3px;
+  color:var(--blood);
+  display:block;
+  margin-bottom:7px;
+}
+.threat-track{
+  height:10px;
+  background:#0d1610;
+  border-radius:2px;
+  overflow:hidden;
+  border:1px solid rgba(192,57,43,0.2);
+}
+.threat-fill{
+  height:100%;
+  background:linear-gradient(90deg,#c0392b,#e74c3c,#ff6b35);
+  border-radius:2px;
+  transition:width 0.6s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 0 12px rgba(192,57,43,0.7);
+  position:relative;
+}
+.threat-fill::after{
+  content:'';
+  position:absolute;right:-1px;top:0;bottom:0;width:3px;
+  background:#ff6b35;
+  box-shadow:0 0 8px #ff6b35;
+  animation:claw-pulse 0.8s ease-in-out infinite;
+}
+@keyframes claw-pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.threat-label{
+  display:flex;justify-content:space-between;
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.62rem;color:var(--dim);margin-top:5px;
+}
+
+/* ============================================================ SURVIVAL STATS */
+.stats-row{
+  display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;
+}
+.stat-pod{
+  flex:1;min-width:82px;
+  background:var(--pit);
+  border:1px solid var(--border);
+  border-radius:4px;padding:9px 12px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.stat-pod::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--venom);
+  box-shadow:var(--glow-g);
+}
+.stat-pod .s-label{font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:var(--dim);letter-spacing:2px;text-transform:uppercase;}
+.stat-pod .s-val{font-family:'Share Tech Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--venom);margin-top:2px;}
+
+/* XP / SURVIVOR RANK */
+.rank-bar-wrap{
+  background:var(--pit);border:1px solid var(--border);
+  border-radius:4px;padding:9px 14px;margin-bottom:20px;
+}
+.rank-labels{display:flex;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:var(--dim);margin-bottom:5px;}
+.rank-track{height:7px;background:#0d1610;border-radius:2px;overflow:hidden;}
+.rank-fill{height:100%;background:linear-gradient(90deg,var(--fern),var(--venom));border-radius:2px;transition:width 0.6s ease;box-shadow:0 0 8px rgba(57,255,20,0.5);}
+
+/* ============================================================ MODE NAV */
+.mode-nav{
+  display:flex;gap:6px;margin-bottom:20px;
+  background:var(--pit);border:1px solid var(--border);
+  border-radius:4px;padding:5px;
+}
+.mode-tab{
+  flex:1;padding:11px 6px;border:none;border-radius:3px;
+  background:transparent;color:var(--dim);
+  font-family:'Oswald',sans-serif;font-size:0.88rem;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;transition:all 0.2s;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+}
+.mode-tab .t-icon{font-size:1.2rem;}
+.mode-tab:hover{color:var(--text);}
+.mode-tab.active{
+  background:rgba(57,255,20,0.08);
+  color:var(--venom);
+  border:1px solid rgba(57,255,20,0.3);
+  box-shadow:var(--glow-g);
+}
+
+/* ============================================================ SCREENS */
+.screen{display:none;}
+.screen.active{display:block;}
+
+/* ============================================================ SHARED: SECTION HEAD */
+.sec-head{
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.65rem;letter-spacing:4px;color:var(--dim);
+  text-transform:uppercase;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.sec-head::before{content:'▶';color:var(--venom);}
+
+/* ============================================================ TOPIC GRID */
+.topics-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+  gap:8px;margin-bottom:16px;
+}
+.topic-btn{
+  background:var(--pit);
+  border:1px solid rgba(57,255,20,0.12);
+  border-radius:4px;padding:14px 10px;
+  cursor:pointer;transition:all 0.2s;
+  text-align:center;color:var(--text);
+  font-family:'Oswald',sans-serif;font-size:0.88rem;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;
+  position:relative;overflow:hidden;
+}
+.topic-btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 40%,rgba(57,255,20,0.04));
+  pointer-events:none;
+}
+.topic-btn:hover{border-color:var(--venom);color:var(--venom);box-shadow:var(--glow-g);transform:translateY(-2px);}
+.topic-btn.selected{border-color:var(--venom);background:rgba(57,255,20,0.07);color:var(--venom);box-shadow:var(--glow-g);}
+.t-icon-big{font-size:1.7rem;display:block;margin-bottom:6px;filter:grayscale(0.3);}
+
+/* ============================================================ ACTION BTN */
+.action-btn{
+  width:100%;padding:15px;border:none;border-radius:4px;
+  background:transparent;
+  border:2px solid var(--venom);
+  color:var(--venom);
+  font-family:'Creepster',cursive;font-size:1.3rem;letter-spacing:3px;
+  cursor:pointer;transition:all 0.2s;
+  position:relative;overflow:hidden;
+  text-shadow:0 0 10px rgba(57,255,20,0.5);
+}
+.action-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(57,255,20,0.08),transparent);
+  pointer-events:none;
+}
+.action-btn:hover{background:rgba(57,255,20,0.1);box-shadow:var(--glow-g);transform:translateY(-2px);}
+.action-btn:disabled{opacity:0.3;cursor:not-allowed;transform:none;border-color:var(--dim);color:var(--dim);text-shadow:none;}
+
+/* ============================================================ QUIZ */
+.hunt-progress{
+  display:flex;gap:6px;margin-bottom:14px;
+}
+.hunt-pip{
+  height:6px;flex:1;border-radius:2px;
+  background:var(--pit);border:1px solid rgba(57,255,20,0.1);
+  transition:all 0.3s;
+}
+.hunt-pip.done-correct{background:var(--venom);box-shadow:0 0 6px rgba(57,255,20,0.5);}
+.hunt-pip.done-wrong{background:var(--blood);box-shadow:0 0 6px rgba(192,57,43,0.5);}
+.hunt-pip.current{background:var(--amber);box-shadow:0 0 8px rgba(230,126,34,0.6);animation:pip-pulse 1s ease-in-out infinite;}
+@keyframes pip-pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+
+.quiz-card{
+  background:var(--pit);
+  border:1px solid rgba(57,255,20,0.15);
+  border-radius:6px;padding:22px 18px;margin-bottom:12px;
+  position:relative;overflow:hidden;
+}
+.quiz-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--venom),transparent);
+  animation:scan-line 3s ease-in-out infinite;
+}
+@keyframes scan-line{0%{opacity:0.3}50%{opacity:1}100%{opacity:0.3}}
+
+.q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.q-tag{
+  font-family:'Share Tech Mono',monospace;font-size:0.63rem;
+  letter-spacing:2px;color:var(--venom);
+  background:rgba(57,255,20,0.08);
+  border:1px solid rgba(57,255,20,0.2);
+  border-radius:3px;padding:3px 9px;
+}
+.q-timer{
+  font-family:'Share Tech Mono',monospace;font-size:1.1rem;
+  font-weight:700;color:var(--amber);
+  min-width:50px;text-align:right;
+}
+.q-timer.danger{color:var(--blood);animation:blink 0.4s step-end infinite;}
+
+.question-txt{
+  font-family:'Oswald',sans-serif;font-size:1.55rem;font-weight:700;
+  line-height:1.5;margin-bottom:18px;color:var(--bone);
+  text-transform:uppercase;letter-spacing:1px;
+}
+
+.opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+@media(max-width:480px){.opts-grid{grid-template-columns:1fr;}}
+
+.opt-btn{
+  background:var(--deep);
+  border:1px solid rgba(139,157,141,0.15);
+  border-radius:4px;padding:16px 15px;
+  cursor:pointer;
+  font-family:'Oswald',sans-serif;font-size:1.15rem;font-weight:400;
+  color:var(--fog);text-align:left;
+  transition:all 0.15s;
+  display:flex;align-items:center;gap:9px;
+  letter-spacing:0.5px;
+}
+.opt-btn:hover:not(:disabled){border-color:var(--venom);color:var(--venom);background:rgba(57,255,20,0.05);}
+.opt-btn.correct{border-color:var(--venom);background:rgba(57,255,20,0.12);color:var(--venom);box-shadow:var(--glow-g);}
+.opt-btn.wrong{border-color:var(--blood);background:rgba(192,57,43,0.1);color:var(--blood);animation:shake 0.35s ease;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+.opt-key{
+  font-family:'Share Tech Mono',monospace;font-size:0.65rem;
+  background:rgba(255,255,255,0.05);
+  width:20px;height:20px;border-radius:2px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+
+.fb-panel{
+  border-radius:4px;padding:14px 16px;margin-top:10px;
+  font-size:1.05rem;line-height:1.6;display:none;border:1px solid;
+  font-family:'Share Tech Mono',monospace;
+}
+.fb-panel.show{display:block;}
+.fb-panel.fb-ok{background:rgba(57,255,20,0.07);border-color:rgba(57,255,20,0.3);color:#90ee90;}
+.fb-panel.fb-bad{background:rgba(192,57,43,0.07);border-color:rgba(192,57,43,0.3);color:#e8a09a;}
+.fb-title{font-weight:700;font-size:1.15rem;margin-bottom:5px;}
+
+.next-btn{
+  width:100%;padding:12px;margin-top:10px;
+  border:1px solid rgba(57,255,20,0.2);border-radius:4px;
+  background:transparent;color:var(--venom);
+  font-family:'Share Tech Mono',monospace;font-size:0.78rem;letter-spacing:3px;
+  cursor:pointer;display:none;transition:all 0.2s;
+  text-transform:uppercase;
+}
+.next-btn:hover{background:rgba(57,255,20,0.07);box-shadow:var(--glow-g);}
+.next-btn.show{display:block;}
+
+/* ============================================================ RESULT */
+.result-card{
+  background:var(--pit);border:1px solid var(--border);
+  border-radius:6px;padding:30px 22px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.result-card::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(57,255,20,0.05) 0%,transparent 70%);
+  pointer-events:none;
+}
+.r-trophy{font-size:3.5rem;display:block;margin-bottom:10px;animation:trophy-in 0.7s cubic-bezier(.17,.67,.35,1.4) forwards;}
+@keyframes trophy-in{0%{transform:scale(0) rotate(-20deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+.r-score{
+  font-family:'Creepster',cursive;font-size:3rem;
+  color:var(--venom);text-shadow:0 0 30px rgba(57,255,20,0.5);
+  margin-bottom:2px;
+}
+.r-label{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--dim);letter-spacing:3px;margin-bottom:18px;}
+.r-stats{display:flex;justify-content:center;gap:24px;margin-bottom:18px;flex-wrap:wrap;}
+.r-stat .rv{font-family:'Share Tech Mono',monospace;font-size:1.4rem;font-weight:700;}
+.r-stat .rk{font-size:0.65rem;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
+.badges-row{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.badge{
+  background:var(--deep);border:1px solid rgba(57,255,20,0.12);
+  border-radius:3px;padding:5px 11px;
+  font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--dim);
+}
+.badge.earned{border-color:var(--amber);color:var(--amber);background:rgba(230,126,34,0.08);box-shadow:var(--glow-a);}
+
+/* ============================================================ FLASHCARDS */
+.fc-nav-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.fc-ctr{font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--dim);}
+.back-lnk{
+  font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--dim);
+  background:none;border:1px solid rgba(139,157,141,0.2);border-radius:3px;
+  padding:6px 12px;cursor:pointer;transition:all 0.18s;letter-spacing:1px;
+}
+.back-lnk:hover{color:var(--text);border-color:var(--text);}
+
+.fc-hint-txt{
+  text-align:center;
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.68rem;color:var(--dim);letter-spacing:2px;margin-bottom:12px;
+}
+
+.fc-scene{perspective:1000px;cursor:pointer;margin-bottom:12px;}
+.fc-card{
+  width:100%;min-height:210px;position:relative;
+  transform-style:preserve-3d;
+  transition:transform 0.55s cubic-bezier(.4,0,.2,1);
+  border-radius:6px;
+}
+.fc-card.flipped{transform:rotateY(180deg);}
+
+.fc-face{
+  position:absolute;inset:0;border-radius:6px;
+  padding:26px 20px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  text-align:center;border:1px solid;
+}
+.fc-front{
+  background:var(--pit);
+  border-color:rgba(57,255,20,0.15);
+}
+.fc-back{
+  background:var(--moss);
+  border-color:rgba(57,255,20,0.35);
+  transform:rotateY(180deg);
+  box-shadow:inset 0 0 40px rgba(57,255,20,0.05);
+}
+.fc-side-label{
+  font-family:'Share Tech Mono',monospace;font-size:0.6rem;
+  letter-spacing:4px;color:var(--dim);text-transform:uppercase;margin-bottom:10px;
+}
+.fc-term-txt{
+  font-family:'Creepster',cursive;font-size:2rem;
+  color:var(--venom);text-shadow:0 0 20px rgba(57,255,20,0.4);margin-bottom:6px;
+  letter-spacing:2px;
+}
+.fc-hint{font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--dim);letter-spacing:1px;}
+.fc-def{font-family:'Oswald',sans-serif;font-size:1rem;font-weight:400;line-height:1.55;color:var(--bone);}
+.fc-eg{font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--venom);margin-top:10px;opacity:0.8;}
+
+.fc-dots{display:flex;justify-content:center;gap:6px;margin-top:10px;flex-wrap:wrap;}
+.fc-dot{width:8px;height:8px;border-radius:50%;background:var(--pit);border:1px solid rgba(57,255,20,0.15);transition:all 0.2s;}
+.fc-dot.seen{background:var(--fern);}
+.fc-dot.curr{background:var(--venom);box-shadow:0 0 6px var(--venom);transform:scale(1.4);}
+
+.fc-btns{display:flex;gap:8px;margin-top:12px;}
+.fc-btn{
+  flex:1;padding:11px;
+  border:1px solid rgba(57,255,20,0.15);border-radius:3px;
+  background:var(--pit);color:var(--fog);
+  font-family:'Share Tech Mono',monospace;font-size:0.8rem;letter-spacing:1px;
+  cursor:pointer;transition:all 0.18s;text-transform:uppercase;
+}
+.fc-btn:hover{border-color:var(--venom);color:var(--venom);}
+.fc-btn:disabled{opacity:0.25;cursor:not-allowed;}
+
+/* ============================================================ EXPERIMENTS */
+.exp-grid{display:grid;gap:10px;margin-bottom:16px;}
+.exp-row{
+  background:var(--pit);border:1px solid rgba(57,255,20,0.12);
+  border-radius:4px;padding:15px;cursor:pointer;
+  transition:all 0.2s;display:flex;align-items:center;gap:13px;
+}
+.exp-row:hover{border-color:var(--claw);box-shadow:var(--glow-a);transform:translateY(-2px);}
+.exp-ico{font-size:1.9rem;flex-shrink:0;}
+.exp-inf{flex:1;}
+.exp-ttl{font-family:'Oswald',sans-serif;font-weight:700;font-size:0.95rem;color:var(--bone);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
+.exp-dsc{font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--dim);}
+.exp-tag{
+  font-family:'Share Tech Mono',monospace;font-size:0.57rem;letter-spacing:1px;
+  padding:3px 7px;border-radius:2px;border:1px solid;flex-shrink:0;
+}
+.exp-tag.safe{color:#22c55e;border-color:#22c55e;background:rgba(34,197,94,0.07);}
+.exp-tag.sim{color:var(--amber);border-color:var(--amber);background:rgba(230,126,34,0.07);}
+
+/* EXP SIM CONTAINER */
+.sim-wrap{
+  background:var(--pit);border:1px solid rgba(57,255,20,0.15);
+  border-radius:6px;padding:20px 16px;margin-bottom:12px;
+}
+.sim-ttl{font-family:'Creepster',cursive;font-size:1.3rem;color:var(--claw);letter-spacing:2px;margin-bottom:4px;}
+.sim-sub{font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--dim);margin-bottom:16px;}
+
+.sim-visual{
+  background:#090d0a;border:1px solid rgba(57,255,20,0.08);
+  border-radius:4px;padding:18px;margin-bottom:12px;
+  min-height:100px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:8px;
+}
+.sim-emoji{font-size:3rem;transition:all 0.4s;filter:drop-shadow(0 0 8px rgba(57,255,20,0.3));}
+.sim-rx-txt{
+  font-family:'Share Tech Mono',monospace;font-size:0.8rem;
+  color:var(--venom);text-align:center;letter-spacing:1px;
+}
+.sim-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.sim-btn{
+  flex:1;min-width:100px;padding:9px;
+  border:1px solid rgba(57,255,20,0.15);border-radius:3px;
+  background:var(--deep);color:var(--fog);
+  font-family:'Share Tech Mono',monospace;font-size:0.8rem;letter-spacing:1px;
+  cursor:pointer;transition:all 0.18s;text-transform:uppercase;
+}
+.sim-btn:hover{border-color:var(--claw);color:var(--claw);}
+.sim-btn.lit{border-color:var(--claw);color:var(--claw);background:rgba(255,107,53,0.1);}
+
+.sim-log{
+  background:#050808;border:1px solid rgba(57,255,20,0.07);
+  border-radius:3px;padding:10px 12px;
+  font-family:'Share Tech Mono',monospace;font-size:0.75rem;
+  color:#4a6050;line-height:1.8;max-height:100px;overflow-y:auto;
+}
+.sim-log .ok{color:#39ff14;}
+.sim-log .warn{color:var(--amber);}
+.sim-log .info{color:var(--ice);}
+
+.steps-box{background:var(--deep);border-radius:4px;padding:12px 14px;margin-bottom:12px;}
+.steps-ttl{font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--bone);margin-bottom:8px;font-size:0.8rem;letter-spacing:2px;}
+.step-row{display:flex;gap:9px;margin-bottom:7px;font-family:'Share Tech Mono',monospace;font-size:0.78rem;color:var(--dim);align-items:flex-start;}
+.step-n{
+  width:20px;height:20px;border-radius:50%;
+  border:1px solid rgba(57,255,20,0.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.6rem;color:var(--venom);flex-shrink:0;margin-top:1px;
+}
+
+/* pH slider */
+.ph-slider{-webkit-appearance:none;width:100%;height:9px;border-radius:2px;outline:none;margin:10px 0;cursor:pointer;
+  background:linear-gradient(to right,#e74c3c,#e67e22,#f1c40f,#2ecc71,#3498db,#9b59b6);}
+.ph-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--bone);border:3px solid var(--venom);cursor:pointer;box-shadow:0 0 8px rgba(57,255,20,0.6);}
+.ph-big{text-align:center;font-family:'Creepster',cursive;font-size:2.5rem;margin:6px 0;}
+.ph-lbl{text-align:center;font-family:'Share Tech Mono',monospace;font-size:0.8rem;font-weight:700;margin-bottom:4px;}
+
+/* element grid */
+.el-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:12px;}
+.el-cell{
+  background:var(--deep);border:1px solid rgba(57,255,20,0.1);
+  border-radius:3px;padding:9px 5px;text-align:center;
+  cursor:pointer;transition:all 0.18s;
+}
+.el-cell:hover{border-color:var(--venom);background:rgba(57,255,20,0.07);}
+.el-cell.active{border-color:var(--venom);background:rgba(57,255,20,0.1);box-shadow:var(--glow-g);}
+.el-sym{font-family:'Creepster',cursive;font-size:1.2rem;color:var(--venom);}
+.el-num{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--dim);}
+.el-nm{font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:var(--fog);margin-top:2px;}
+.el-info{
+  background:var(--deep);border:1px solid rgba(57,255,20,0.12);
+  border-radius:4px;padding:13px 14px;
+  font-family:'Share Tech Mono',monospace;font-size:0.8rem;line-height:1.7;color:var(--bone);
+}
+.el-info strong{color:var(--venom);}
+
+/* ============================================================ QUIZ MODAL OVERLAY */
+.quiz-modal-overlay{
+  position:fixed;inset:0;z-index:980;
+  background:rgba(0,0,0,0.92);
+  display:none;
+  align-items:center;justify-content:center;
+  padding:12px;
+  backdrop-filter:blur(6px);
+}
+.quiz-modal-overlay.open{display:flex;}
+.quiz-modal-box{
+  background:var(--pit);
+  border:2px solid rgba(57,255,20,0.25);
+  border-radius:8px;
+  width:100%;max-width:680px;
+  max-height:90vh;overflow-y:auto;
+  padding:24px 20px;
+  position:relative;
+  box-shadow:0 0 60px rgba(57,255,20,0.12),0 0 120px rgba(192,57,43,0.08);
+  animation:modal-in 0.35s cubic-bezier(.17,.67,.35,1.4) forwards;
+}
+@keyframes modal-in{0%{transform:scale(0.85) translateY(30px);opacity:0}100%{transform:scale(1) translateY(0);opacity:1}}
+.quiz-modal-close{
+  position:absolute;top:12px;right:14px;
+  background:transparent;border:1px solid rgba(192,57,43,0.3);
+  color:var(--blood);font-family:'Share Tech Mono',monospace;
+  font-size:0.75rem;letter-spacing:2px;padding:5px 10px;
+  cursor:pointer;border-radius:3px;transition:all 0.2s;
+}
+.quiz-modal-close:hover{background:rgba(192,57,43,0.15);box-shadow:var(--glow-r);}
+
+/* ============================================================ HORROR WORD SPLASH (CORRECT) */
+.horror-splash{
+  position:fixed;top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(0) rotate(-8deg);
+  z-index:1000;pointer-events:none;text-align:center;
+  transition:transform 0.25s cubic-bezier(.17,.67,.35,1.6),opacity 0.25s;
+  opacity:0;
+}
+.horror-splash.show{transform:translate(-50%,-50%) scale(1) rotate(-3deg);opacity:1;}
+.horror-splash.hide{transform:translate(-50%,-50%) scale(1.4) rotate(5deg);opacity:0;transition:all 0.45s ease-in;}
+.horror-word{
+  font-family:'Creepster',cursive;
+  font-size:clamp(3.5rem,14vw,7rem);
+  color:var(--venom);
+  text-shadow:0 0 40px rgba(57,255,20,0.9),0 0 80px rgba(57,255,20,0.5),0 0 2px #000;
+  letter-spacing:6px;
+  display:block;
+  filter:drop-shadow(0 0 24px rgba(57,255,20,0.7));
+  animation:horror-flicker 0.08s step-end 4;
+}
+.horror-sub{
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.85rem,3.5vw,1.2rem);
+  color:var(--venom);
+  letter-spacing:4px;
+  text-transform:uppercase;
+  text-shadow:0 0 15px rgba(57,255,20,0.9);
+}
+/* ============================================================ HORROR WORD SPLASH (WRONG) */
+.horror-splash-wrong{
+  position:fixed;top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(0) rotate(8deg);
+  z-index:1000;pointer-events:none;text-align:center;
+  transition:transform 0.2s cubic-bezier(.17,.67,.35,1.6),opacity 0.2s;
+  opacity:0;
+}
+.horror-splash-wrong.show{transform:translate(-50%,-50%) scale(1) rotate(3deg);opacity:1;}
+.horror-splash-wrong.hide{transform:translate(-50%,-50%) scale(1.5) rotate(-6deg);opacity:0;transition:all 0.5s ease-in;}
+.horror-word-wrong{
+  font-family:'Creepster',cursive;
+  font-size:clamp(3.5rem,14vw,7rem);
+  color:var(--blood);
+  text-shadow:0 0 40px rgba(192,57,43,1),0 0 80px rgba(192,57,43,0.6),0 0 2px #000;
+  letter-spacing:6px;
+  display:block;
+  filter:drop-shadow(0 0 28px rgba(192,57,43,0.9));
+  animation:horror-flicker 0.06s step-end 5;
+}
+.horror-sub-wrong{
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(0.85rem,3.5vw,1.2rem);
+  color:var(--blood);
+  letter-spacing:4px;
+  text-transform:uppercase;
+  text-shadow:0 0 15px rgba(192,57,43,1);
+}
+@keyframes horror-flicker{0%,100%{opacity:1}50%{opacity:0.2}}
+
+/* ============================================================ TOAST */
+.toast{
+  position:fixed;top:14px;right:14px;
+  background:var(--pit);border:1px solid var(--border);
+  border-radius:4px;padding:9px 15px;
+  font-family:'Share Tech Mono',monospace;font-weight:700;font-size:0.82rem;
+  z-index:999;transform:translateX(130%);transition:transform 0.3s;
+  box-shadow:var(--glow-g);color:var(--venom);
+  letter-spacing:1px;
+}
+.toast.show{transform:translateX(0);}
+
+/* ============================================================ SCREEN FLASH */
+.screen-flash{
+  position:fixed;inset:0;pointer-events:none;z-index:900;
+  opacity:0;transition:opacity 0.1s;
+}
+.screen-flash.red{background:rgba(192,57,43,0.25);}
+.screen-flash.green{background:rgba(57,255,20,0.15);}
+.screen-flash.active{opacity:1;}
+
+/* ============================================================ PREDATOR CLOSER OVERLAY */
+.predator-msg{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
+  z-index:950;text-align:center;pointer-events:none;
+  transition:transform 0.3s cubic-bezier(.17,.67,.35,1.4),opacity 0.3s;
+  opacity:0;
+}
+.predator-msg.show{transform:translate(-50%,-50%) scale(1);opacity:1;}
+.pred-txt{
+  font-family:'Creepster',cursive;font-size:clamp(1.8rem,6vw,3rem);
+  color:var(--blood);text-shadow:0 0 30px rgba(192,57,43,0.8);
+  letter-spacing:4px;
+}
+.pred-sub{font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--amber);letter-spacing:3px;margin-top:4px;}
+</style>
+</head>
+<body>
+
+<!-- screen flash effect -->
+<div class="screen-flash" id="scr-flash"></div>
+
+<!-- predator message overlay -->
+<div class="predator-msg" id="pred-msg">
+  <div class="pred-txt" id="pred-txt">IT'S CLOSER</div>
+  <div class="pred-sub" id="pred-sub">THE PREDATOR DRAWS NEAR</div>
+</div>
+
+<!-- horror word splash (correct answer) -->
+<div class="horror-splash" id="horror-splash">
+  <span class="horror-word" id="horror-word">SLAUGHTER!</span>
+  <div class="horror-sub" id="horror-sub">YOU SURVIVED</div>
+</div>
+
+<!-- horror word splash (wrong answer) -->
+<div class="horror-splash-wrong" id="horror-splash-wrong">
+  <span class="horror-word-wrong" id="horror-word-wrong">DEVOURED!</span>
+  <div class="horror-sub-wrong" id="horror-sub-wrong">THE BEAST FEEDS</div>
+</div>
+
+<!-- QUIZ MODAL OVERLAY -->
+<div class="quiz-modal-overlay" id="quiz-modal-overlay">
+  <div class="quiz-modal-box" id="quiz-modal-box">
+    <button class="quiz-modal-close" id="quiz-modal-close">✕ FLEE</button>
+    <div id="qm-play">
+      <div class="hunt-progress" id="hunt-pips-modal"></div>
+      <div class="quiz-card">
+        <div class="q-meta">
+          <div class="q-tag" id="q-tag-modal">TARGET 1 / 5</div>
+          <div class="q-timer" id="q-timer-modal">⏱ 15</div>
+        </div>
+        <div class="question-txt" id="q-text-modal"></div>
+        <div class="opts-grid" id="opts-grid-modal"></div>
+        <div class="fb-panel" id="fb-panel-modal">
+          <div class="fb-title" id="fb-title-modal"></div>
+          <div id="fb-body-modal"></div>
+        </div>
+      </div>
+      <button class="next-btn" id="next-btn-modal">▶ NEXT TARGET</button>
+    </div>
+    <div id="qm-result" style="display:none">
+      <div class="result-card">
+        <span class="r-trophy" id="r-trophy-modal">🏆</span>
+        <div class="r-score" id="r-score-modal">0</div>
+        <div class="r-label">POINTS SEIZED</div>
+        <div class="r-stats">
+          <div class="r-stat"><div class="rv" id="rs-c-modal" style="color:#39ff14">0</div><div class="rk">CORRECT</div></div>
+          <div class="r-stat"><div class="rv" id="rs-w-modal" style="color:#c0392b">0</div><div class="rk">MISSED</div></div>
+          <div class="r-stat"><div class="rv" id="rs-acc-modal" style="color:var(--amber)">0%</div><div class="rk">ACCURACY</div></div>
+        </div>
+        <div class="badges-row" id="badges-row-modal"></div>
+        <button class="action-btn" id="play-again-btn-modal" style="margin-top:4px">↩ HUNT AGAIN</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- TITLE -->
+  <div class="title-block">
+    <div class="title-eyebrow">⚗ CHEM SURVIVAL PROTOCOL ⚗</div>
+    <div class="title-main">HUNT OR BE HUNTED</div>
+    <div class="title-sub">▸ ANSWER CORRECTLY OR BECOME PREY ◂</div>
+  </div>
+
+  <!-- THREAT METER -->
+  <div class="threat-bar-wrap">
+    <div class="threat-track">
+      <div class="threat-fill" id="threat-fill" style="width:0%"></div>
+    </div>
+    <div class="threat-label">
+      <span>SAFE</span>
+      <span id="threat-label-txt">PREDATOR DORMANT</span>
+      <span>DEVOURED</span>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-pod"><div class="s-label">KILLS</div><div class="s-val" id="score-display">0</div></div>
+    <div class="stat-pod"><div class="s-label">RANK</div><div class="s-val" id="level-display">1</div></div>
+    <div class="stat-pod"><div class="s-label">STREAK</div><div class="s-val" id="streak-display">0</div></div>
+  </div>
+  <div class="rank-bar-wrap">
+    <div class="rank-labels"><span>SURVIVOR XP</span><span id="xp-label">0 / 100</span></div>
+    <div class="rank-track"><div class="rank-fill" id="xp-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- MODE NAV -->
+  <div class="mode-nav">
+    <button class="mode-tab active" data-mode="quiz"><span class="t-icon">🎯</span>HUNT</button>
+    <button class="mode-tab" data-mode="flashcards"><span class="t-icon">🃏</span>INTEL</button>
+    <button class="mode-tab" data-mode="experiments"><span class="t-icon">☣️</span>LAB</button>
+  </div>
+
+  <!-- ======== QUIZ / HUNT ======== -->
+  <div class="screen active" id="screen-quiz">
+    <div id="quiz-picker">
+      <div class="sec-head">SELECT YOUR HUNTING GROUND</div>
+      <div class="topics-grid" id="quiz-topics"><button class="topic-btn"><span class="t-icon-big">🧪</span>Formulas</button><button class="topic-btn"><span class="t-icon-big">⚡</span>Reactions</button><button class="topic-btn"><span class="t-icon-big">☣️</span>pH &amp; Acids</button><button class="topic-btn"><span class="t-icon-big">🔗</span>Bonding</button><button class="topic-btn"><span class="t-icon-big">☢️</span>Elements</button><button class="topic-btn"><span class="t-icon-big">💨</span>States</button></div>
+      <button class="action-btn" id="start-btn" disabled="">☠ BEGIN THE HUNT ☠</button>
+    </div>
+  </div>
+
+  <!-- ======== FLASHCARDS / INTEL ======== -->
+  <div class="screen" id="screen-flashcards">
+    <div id="fc-picker">
+      <div class="sec-head">CHOOSE INTEL DOSSIER</div>
+      <div class="topics-grid" id="fc-topics"><button class="topic-btn"><span class="t-icon-big">🧪</span>Formulas</button><button class="topic-btn"><span class="t-icon-big">⚡</span>Reactions</button><button class="topic-btn"><span class="t-icon-big">☣️</span>pH &amp; Acids</button><button class="topic-btn"><span class="t-icon-big">🔗</span>Bonding</button><button class="topic-btn"><span class="t-icon-big">☢️</span>Elements</button><button class="topic-btn"><span class="t-icon-big">💨</span>States</button></div>
+      <button class="action-btn" id="fc-start-btn" disabled="">📂 ACCESS INTEL</button>
+    </div>
+    <div id="fc-study" style="display:none">
+      <div class="fc-nav-row">
+        <div class="fc-ctr" id="fc-ctr">CARD 1 / 6</div>
+        <button class="back-lnk" id="fc-back">← DOSSIERS</button>
+      </div>
+      <div class="fc-hint-txt">[ TAP CARD TO REVEAL INTEL ]</div>
+      <div class="fc-scene" id="fc-scene">
+        <div class="fc-card" id="fc-card">
+          <div class="fc-face fc-front">
+            <div class="fc-side-label">CLASSIFIED TERM</div>
+            <div class="fc-term-txt" id="fc-term">...</div>
+            <div class="fc-hint" id="fc-hint"></div>
+          </div>
+          <div class="fc-face fc-back">
+            <div class="fc-side-label">INTEL DECODED</div>
+            <div class="fc-def" id="fc-def">...</div>
+            <div class="fc-eg" id="fc-eg"></div>
+          </div>
+        </div>
+      </div>
+      <div class="fc-dots" id="fc-dots"></div>
+      <div class="fc-btns" style="margin-top:10px">
+        <button class="fc-btn" id="fc-prev">◀ PREV</button>
+        <button class="fc-btn" id="fc-next">NEXT ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== EXPERIMENTS / LAB ======== -->
+  <div class="screen" id="screen-experiments">
+    <div id="exp-list-view">
+      <div class="sec-head">CHOOSE LAB EXPERIMENT</div>
+      <div class="exp-grid" id="exp-list"><div class="exp-row"><div class="exp-ico">☣️</div><div class="exp-inf"><div class="exp-ttl">pH FIELD TEST</div><div class="exp-dsc">Scan the acid/base spectrum — know your environment.</div></div><div class="exp-tag safe">SAFE</div></div><div class="exp-row"><div class="exp-ico">🧪</div><div class="exp-inf"><div class="exp-ttl">NEUTRALISATION REACTION</div><div class="exp-dsc">Deploy acid vs base. Observe the chemical standoff.</div></div><div class="exp-tag safe">SAFE</div></div><div class="exp-row"><div class="exp-ico">🔥</div><div class="exp-inf"><div class="exp-ttl">COMBUSTION PROTOCOL</div><div class="exp-dsc">Simulate methane ignition — observe the aftermath.</div></div><div class="exp-tag sim">SIMULATED</div></div><div class="exp-row"><div class="exp-ico">☢️</div><div class="exp-inf"><div class="exp-ttl">ELEMENT SCANNER</div><div class="exp-dsc">Access element dossiers — know what you're made of.</div></div><div class="exp-tag safe">SAFE</div></div></div>
+    </div>
+    <div id="exp-sim-view" style="display:none"></div>
+  </div>
+
+</div><!-- /wrap -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ================================================================
+// DATA
+// ================================================================
+const TOPICS=[
+  {id:'formulas', label:'Formulas',   icon:'🧪'},
+  {id:'reactions',label:'Reactions',  icon:'⚡'},
+  {id:'ph',       label:'pH & Acids', icon:'☣️'},
+  {id:'bonding',  label:'Bonding',    icon:'🔗'},
+  {id:'elements', label:'Elements',   icon:'☢️'},
+  {id:'states',   label:'States',     icon:'💨'},
+];
+
+const QUESTIONS={
+  formulas:[
+    {q:"IDENTIFY: The chemical formula for water?",options:["H₂O","CO₂","NaCl","O₂"],answer:0,explain:"H₂O — 2 hydrogen + 1 oxygen. The most common compound on Earth. Know your basics, survivor."},
+    {q:"DECODE: What does CO₂ represent?",options:["Carbon monoxide","Carbon dioxide","Calcium oxide","Cobalt oxide"],answer:1,explain:"Carbon Dioxide. 1 Carbon + 2 Oxygen. You exhale this every breath — it's all around you."},
+    {q:"ANALYZE: Formula for table salt?",options:["KCl","MgO","NaCl","CaCO₃"],answer:2,explain:"NaCl — Sodium Chloride. Ionic bond between Na⁺ and Cl⁻. Essential to survival."},
+    {q:"TARGET: Which is glucose (sugar)?",options:["C₆H₁₂O₆","C₂H₅OH","CH₄","H₂SO₄"],answer:0,explain:"C₆H₁₂O₆ — glucose. Your cells burn this for energy. Without it, you're prey."},
+    {q:"IDENTIFY: Formula for ammonia?",options:["N₂O","NO₂","NH₃","N₂H₄"],answer:2,explain:"NH₃ — 1 nitrogen, 3 hydrogen. Pungent. Deadly in high concentrations. Handle with care."},
+  ],
+  reactions:[
+    {q:"CLASSIFY: Which reaction releases heat?",options:["Endothermic","Exothermic","Photosynthetic","Decomposition"],answer:1,explain:"Exothermic — energy exits the system as heat. Fire, explosions, body heat. All exothermic."},
+    {q:"In 2H₂ + O₂ → 2H₂O, what is H₂O?",options:["Reactant","Catalyst","Product","Element"],answer:2,explain:"Product — formed AFTER the reaction. Reactants go in, products come out. Simple survival chemistry."},
+    {q:"DEFINE: What does a catalyst do?",options:["Slows reactions","Speeds without being consumed","A type of acid","A product"],answer:1,explain:"Catalyst = speeds reactions without being used up. Enzymes in your blood do this every second."},
+    {q:"IDENTIFY: Which is decomposition?",options:["A+B→AB","AB→A+B","A+BC→AC+B","2A+B₂→2AB"],answer:1,explain:"AB → A+B. One compound breaks apart. Like a body decomposing in the jungle. Nature reclaims all."},
+    {q:"PRINCIPLE: Conservation of Mass states?",options:["Mass is created","Mass is destroyed","Mass is conserved","Mass doubles"],answer:2,explain:"Mass is NEVER created or destroyed — only rearranged. The jungle takes, the jungle gives back."},
+  ],
+  ph:[
+    {q:"CALIBRATE: Neutral pH value?",options:["0","7","14","5"],answer:1,explain:"pH 7 = neutral. Pure water. Your blood sits at 7.4. Even the slightest shift can be lethal."},
+    {q:"IDENTIFY: Which is an acid?",options:["Baking soda","Bleach","Lemon juice","Soap"],answer:2,explain:"Lemon juice — pH ~2. Acids taste sour, corrode metals. The jungle has many acidic traps."},
+    {q:"ANALYZE: What does a base release in water?",options:["H⁺ ions","OH⁻ ions","CO₂","Electrons"],answer:1,explain:"Hydroxide ions (OH⁻). Bases feel slippery — they'll dissolve organic matter. Including you."},
+    {q:"REACTION: Acid + Base produces?",options:["An element","Salt + Water","Gas only","A polymer"],answer:1,explain:"Salt + Water. Neutralisation. Two threats cancel each other out. Know your enemy."},
+    {q:"DANGER LEVEL: Strongest acid pH?",options:["1","7","10","14"],answer:0,explain:"pH 1 — strong acid. Stomach acid is pH 1-2. Battery acid too. Respect the scale."},
+  ],
+  bonding:[
+    {q:"IDENTIFY: Bond formed by sharing electrons?",options:["Ionic","Covalent","Metallic","Hydrogen"],answer:1,explain:"Covalent. Atoms SHARE electrons — a partnership of mutual need. Even molecules survive together."},
+    {q:"Ionic bonds form between?",options:["Two non-metals","Two metals","Metal + non-metal","Noble gases"],answer:2,explain:"Metal gives, non-metal takes. Like predator and prey — one gains, one loses."},
+    {q:"Carbon forms how many bonds?",options:["2","4","6","8"],answer:1,explain:"4 bonds. Carbon has 4 valence electrons — it needs 4 more. It's the backbone of all life. Including yours."},
+    {q:"DEFINE: Metallic bonding?",options:["Shared electron clouds","Electron transfer","Ion attraction","Proton sharing"],answer:0,explain:"Sea of delocalised electrons. They flow freely — that's why metals conduct. Adaptable. Survivable."},
+    {q:"RANK: Strongest bond type?",options:["Hydrogen","Van der Waals","Covalent","Dipole-dipole"],answer:2,explain:"Covalent bonds — direct electron sharing. The strongest chemical bond. Unbreakable under normal conditions."},
+  ],
+  elements:[
+    {q:"CODE NAME: Symbol for Gold?",options:["Go","Gd","Au","Ag"],answer:2,explain:"Au — from Latin 'Aurum'. Precious, inert, eternal. Unlike most things in the jungle, gold doesn't decay."},
+    {q:"COUNT: Elements in the periodic table?",options:["108","112","118","120"],answer:2,explain:"118 elements. From Hydrogen-1 to Oganesson-118. Every substance you'll encounter is built from these."},
+    {q:"IDENTIFY: Atomic number 1?",options:["Helium","Oxygen","Carbon","Hydrogen"],answer:3,explain:"Hydrogen. The lightest, the most abundant in the universe. Stars are mostly hydrogen. So is water."},
+    {q:"LOCATION: Noble Gas group?",options:["Group 1","Group 7","Group 17","Group 18"],answer:3,explain:"Group 18. Full outer shells — they react with nothing. The ultimate lone survivors."},
+    {q:"IDENTIFY: Non-metal liquid at room temp?",options:["Bromine","Chlorine","Fluorine","Iodine"],answer:0,explain:"Bromine (Br). The only non-metal liquid at room temperature. Reddish-brown, toxic vapour. Avoid."},
+  ],
+  states:[
+    {q:"FASTEST particles in which state?",options:["Solid","Liquid","Gas","Plasma"],answer:2,explain:"Gas. Particles move fastest, spread everywhere. Like a predator's scent — fills every space."},
+    {q:"DEFINE: Liquid → Gas transition?",options:["Condensation","Sublimation","Evaporation","Melting"],answer:2,explain:"Evaporation. Happens at the surface, below boiling point. Your sweat does this — it's keeping you alive."},
+    {q:"When heated, particles do what?",options:["Slow down","Stop","Move faster & spread","Shrink"],answer:2,explain:"Gain energy, move faster, spread apart. Heat accelerates everything. In the jungle, that means danger."},
+    {q:"TERM: Solid directly to gas?",options:["Melting","Condensation","Sublimation","Freezing"],answer:2,explain:"Sublimation. Dry ice does this — solid CO₂ vanishes into the air. No liquid phase. No warning."},
+    {q:"STRUCTURE: Particles in a solid?",options:["Random, far apart","Close, fixed positions","Spread freely","Random, close"],answer:1,explain:"Close, fixed, vibrating. A solid holds its ground — rigid, immovable. Like a fortress. Or a tombstone."},
+  ],
+};
+
+const FLASHCARDS={
+  formulas:[
+    {term:"H₂O",hint:"Most common compound on Earth",def:"Water — 2 hydrogen atoms bonded to 1 oxygen. Covers 71% of Earth. You need it to survive.",eg:"Rain, rivers, blood plasma"},
+    {term:"CO₂",hint:"The gas you exhale",def:"Carbon Dioxide. 1 carbon + 2 oxygen. Greenhouse gas. Too much = climate collapse. Too little in blood = unconsciousness.",eg:"Fizzy drinks, dry ice, forest atmospheres"},
+    {term:"NaCl",hint:"Found in your kit",def:"Sodium Chloride — table salt. Ionic compound. Essential for nerve signals and fluid balance.",eg:"Food preservation, seawater, electrolytes"},
+    {term:"NH₃",hint:"Deadly smell",def:"Ammonia. 1 nitrogen + 3 hydrogen. Toxic in high concentrations. Found in decomposing matter.",eg:"Fertiliser, cleaning agents, decomposition"},
+    {term:"H₂SO₄",hint:"The acid king",def:"Sulfuric acid. Extremely corrosive diprotic acid. Will dissolve organic matter on contact.",eg:"Car batteries, industrial processing"},
+    {term:"C₆H₁₂O₆",hint:"Your cell fuel",def:"Glucose. Primary energy molecule for cells. Produced by photosynthesis. Without it, you shut down.",eg:"Blood sugar, fruit, photosynthesis output"},
+  ],
+  reactions:[
+    {term:"Exothermic",hint:"Releases heat — dangerous",def:"Reaction releasing energy to surroundings. Products have less energy than reactants. Produces heat, light, or sound.",eg:"Combustion, explosions, cellular respiration"},
+    {term:"Endothermic",hint:"Absorbs heat — cold trap",def:"Reaction absorbing energy from surroundings. The environment cools around it. Can be deceptive.",eg:"Photosynthesis, dissolving ammonium nitrate"},
+    {term:"Catalyst",hint:"Speeds without being consumed",def:"Increases reaction rate without being permanently changed. Essential biological enzymes are catalysts.",eg:"Enzymes, platinum in catalytic converters"},
+    {term:"Oxidation",hint:"Gains oxygen / loses electrons",def:"Substance gains oxygen or loses electrons. Always paired with reduction in REDOX reactions.",eg:"Rusting iron, burning, cellular metabolism"},
+    {term:"Precipitation",hint:"Solid erupts from liquid",def:"An insoluble solid (precipitate) forms when two solutions are mixed. Sudden, unexpected — like an ambush.",eg:"BaCl₂ + Na₂SO₄ → white BaSO₄ solid"},
+    {term:"REDOX",hint:"Two reactions hunt each other",def:"Simultaneous oxidation + reduction. One loses electrons, one gains. Predator and prey — perfectly balanced.",eg:"Electrochemistry, smelting ore, metabolism"},
+  ],
+  ph:[
+    {term:"pH Scale",hint:"0 to 14 — know the range",def:"Measures acidity/alkalinity. pH 0-6 = acidic, 7 = neutral, 8-14 = alkaline. Outside pH 6.8-7.4, your body fails.",eg:"Lemon=2, Water=7, Bleach=12"},
+    {term:"Acid",hint:"pH below 7 — corrosive",def:"Releases H⁺ ions in water. Sour taste, corrodes metals. Many jungle organisms secrete acid as defence.",eg:"HCl in stomach, citric acid in fruit"},
+    {term:"Base",hint:"pH above 7 — slippery",def:"Releases OH⁻ ions. Feels soapy — breaks down fats and organic tissue. Drain cleaner is strongly basic.",eg:"NaOH, baking soda, bleach"},
+    {term:"Neutralisation",hint:"Acid meets base — standoff",def:"Acid + Base → Salt + Water. Two reactive forces cancel each other. pH moves toward 7.",eg:"HCl + NaOH → NaCl + H₂O"},
+    {term:"Indicator",hint:"Reveals the truth",def:"Changes colour to reveal pH. Universal indicator shows full range. Litmus: red=acid, blue=base. Intel gathering.",eg:"Litmus paper, universal indicator, phenolphthalein"},
+  ],
+  bonding:[
+    {term:"Covalent Bond",hint:"Sharing is surviving",def:"Two atoms share electron pairs. Usually between non-metals. Strong — requires energy to break. The alliance bond.",eg:"H₂, O₂, H₂O, CO₂, DNA backbone"},
+    {term:"Ionic Bond",hint:"One takes, one gives",def:"Electrostatic attraction between opposite ions. Metal gives electrons (becomes +), non-metal takes (becomes -).",eg:"NaCl — Na⁺ and Cl⁻ bound together"},
+    {term:"Metallic Bond",hint:"Sea of free electrons",def:"Positive metal ions in a delocalised electron sea. Electrons flow freely — explains electrical conductivity.",eg:"Copper wiring, aluminium foil, iron structures"},
+    {term:"Valence Electrons",hint:"Your combat electrons",def:"Outermost shell electrons. They bond, react, attack. The number determines an element's chemical personality.",eg:"Oxygen: 6 valence electrons — hungers for 2 more"},
+    {term:"Electron Shell",hint:"Layers of protection",def:"Energy levels around the nucleus. Shell 1 holds 2 electrons, shell 2 holds 8. Full shells = noble gas stability.",eg:"Carbon: 2,4 — Sodium: 2,8,1 (exposed!)"},
+  ],
+  elements:[
+    {term:"Hydrogen (H)",hint:"Atomic #1 — the lightest",def:"Lightest, most abundant element in the universe. Stars are 73% hydrogen. Highly flammable — handle with extreme care.",eg:"Fuel cells, fusion reactions, water"},
+    {term:"Oxygen (O)",hint:"You need this to survive",def:"Atomic number 8. 21% of atmosphere. Supports combustion and respiration. Without it, 4 minutes and you're done.",eg:"Breathing, fire, water (H₂O)"},
+    {term:"Carbon (C)",hint:"Foundation of life",def:"Atomic number 6. Forms more compounds than any other element. All known life is carbon-based. Including you.",eg:"Diamond, graphite, DNA, fossil fuels"},
+    {term:"Gold (Au)",hint:"From Latin 'Aurum'",def:"Atomic number 79. Dense, corrosion-resistant. Doesn't react with oxygen — it endures while everything else decays.",eg:"Jewellery, electronics, currency reserves"},
+    {term:"Noble Gases",hint:"Group 18 — untouchable",def:"Full outer electron shells — chemically inert. They react with virtually nothing. The perfect lone survivors.",eg:"Neon signs, helium balloons, argon welding"},
+  ],
+  states:[
+    {term:"Solid",hint:"Immovable — like a boulder",def:"Particles closely packed in fixed positions. They vibrate but don't flow. Definite shape and volume. Resistant to change.",eg:"Rock, ice, bone"},
+    {term:"Liquid",hint:"Adaptive — takes any shape",def:"Particles close but mobile. Definite volume, no fixed shape. Flows, fills containers. Like a predator moving through undergrowth.",eg:"Water, mercury, blood"},
+    {term:"Gas",hint:"Invisible — fills everything",def:"Particles far apart, high speed, random motion. No fixed shape or volume. You can't see it, but it's everywhere.",eg:"Air, steam, toxic vapour"},
+    {term:"Evaporation",hint:"Liquid escaping as gas",def:"Surface particles gain enough energy to escape as gas. Below boiling point. Your sweat uses this to cool you.",eg:"Puddles vanishing, sweat, fuel evaporating"},
+    {term:"Sublimation",hint:"Solid vanishes — no liquid phase",def:"Direct solid → gas without passing through liquid. Leaves no trace. The perfect disappearance.",eg:"Dry ice, iodine, frost vanishing"},
+    {term:"Condensation",hint:"Gas surrenders to cold",def:"Gas loses energy and becomes liquid. The predator slowed by cold. Droplets form on cold surfaces.",eg:"Dew on leaves, breath on cold glass"},
+  ],
+};
+
+const EXPERIMENTS=[
+  {id:'ph',    ico:'☣️', ttl:'pH FIELD TEST',          dsc:'Scan the acid/base spectrum — know your environment.',  tag:'safe', tl:'SAFE'},
+  {id:'rxn',   ico:'🧪', ttl:'NEUTRALISATION REACTION', dsc:'Deploy acid vs base. Observe the chemical standoff.',   tag:'safe', tl:'SAFE'},
+  {id:'fire',  ico:'🔥', ttl:'COMBUSTION PROTOCOL',     dsc:'Simulate methane ignition — observe the aftermath.',   tag:'sim',  tl:'SIMULATED'},
+  {id:'atoms', ico:'☢️', ttl:'ELEMENT SCANNER',         dsc:'Access element dossiers — know what you\'re made of.', tag:'safe', tl:'SAFE'},
+];
+
+const MINI_ELS=[
+  {s:'H',  n:'Hydrogen', z:1,  g:'Non-metal',    d:'Lightest element. Highly flammable gas. Most abundant in the universe.',   u:'Fuel cells, water, stars'},
+  {s:'He', n:'Helium',   z:2,  g:'Noble Gas',     d:'Inert, colourless. Second lightest. Doesn\'t burn. The survivor of elements.',u:'Balloons, MRI, welding'},
+  {s:'C',  n:'Carbon',   z:6,  g:'Non-metal',     d:'Backbone of all organic life. Exists as diamond, graphite, and much more.', u:'Fuels, DNA, diamond'},
+  {s:'O',  n:'Oxygen',   z:8,  g:'Non-metal',     d:'21% of atmosphere. Supports all combustion and aerobic life.',             u:'Breathing, fire, water'},
+  {s:'Na', n:'Sodium',   z:11, g:'Alkali Metal',  d:'Violently reactive with water. Soft enough to cut with a knife.',          u:'Salt, soap, street lights'},
+  {s:'Cl', n:'Chlorine', z:17, g:'Halogen',       d:'Yellow-green toxic gas. Highly reactive. Used as a chemical weapon in WWI.',u:'Water treatment, bleach, PVC'},
+  {s:'Fe', n:'Iron',     z:26, g:'Trans. Metal',  d:'Most-used metal. Rusts in moist air. Core of Earth is solid iron.',        u:'Steel, bridges, haemoglobin'},
+  {s:'Au', n:'Gold',     z:79, g:'Trans. Metal',  d:'Dense, corrosion-proof. Doesn\'t oxidise. Outlasts everything around it.', u:'Electronics, jewellery, currency'},
+];
+
+// ================================================================
+// STATE
+// ================================================================
+let S={
+  score:0,level:1,xp:0,xpN:100,
+  streak:0,maxStreak:0,
+  threat:0, // 0-100
+  topic:null,qs:[],qi:0,ans:false,correct:0,wrong:0,
+  timer:null,tLeft:15,
+  fcCards:[],fcI:0,fcSeen:new Set(),fcTopic:null,
+};
+
+// ================================================================
+// UTILS
+// ================================================================
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function flash(type){
+  const f=document.getElementById('scr-flash');
+  f.className='screen-flash '+type+' active';
+  setTimeout(()=>f.className='screen-flash',350);
+}
+
+function showPredMsg(txt,sub){
+  const m=document.getElementById('pred-msg');
+  document.getElementById('pred-txt').textContent=txt;
+  document.getElementById('pred-sub').textContent=sub;
+  m.classList.add('show');
+  setTimeout(()=>m.classList.remove('show'),1800);
+}
+
+function setThreat(val){
+  S.threat=Math.min(100,Math.max(0,val));
+  document.getElementById('threat-fill').style.width=S.threat+'%';
+  const labels=['PREDATOR DORMANT','PREDATOR STIRRING','IT SENSES YOU','IT\'S TRACKING YOU','IT\'S CLOSE','RUN.'];
+  const idx=Math.min(5,Math.floor(S.threat/17));
+  document.getElementById('threat-label-txt').textContent=labels[idx];
+}
+
+function addScore(pts){
+  S.score+=pts; S.xp+=pts;
+  document.getElementById('score-display').textContent=S.score;
+  document.getElementById('streak-display').textContent=S.streak;
+  while(S.xp>=S.xpN){
+    S.xp-=S.xpN; S.level++;
+    S.xpN=Math.floor(S.xpN*1.4);
+    toast('🐾 RANK UP — SURVIVOR LEVEL '+S.level);
+  }
+  document.getElementById('level-display').textContent=S.level;
+  document.getElementById('xp-label').textContent=S.xp+' / '+S.xpN;
+  document.getElementById('xp-fill').style.width=((S.xp/S.xpN)*100)+'%';
+}
+
+// ================================================================
+// MODE NAV
+// ================================================================
+document.querySelectorAll('.mode-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('screen-'+tab.dataset.mode).classList.add('active');
+  });
+});
+
+// ================================================================
+// QUIZ
+// ================================================================
+
+// ================================================================
+// ████  CINEMATIC HORROR AUDIO ENGINE  ████
+// ================================================================
+const AC = new (window.AudioContext || window.webkitAudioContext)();
+
+// Master limiter to prevent clipping
+const masterLimiter = AC.createDynamicsCompressor();
+masterLimiter.threshold.value = -3;
+masterLimiter.knee.value = 1;
+masterLimiter.ratio.value = 20;
+masterLimiter.attack.value = 0.001;
+masterLimiter.release.value = 0.1;
+masterLimiter.connect(AC.destination);
+
+function dest(){ return masterLimiter; }
+
+// --- Utility: hard-clip distortion curve ---
+function makeDistCurve(amount){
+  const n=512, c=new Float32Array(n);
+  for(let i=0;i<n;i++){
+    const x=i*2/n-1;
+    c[i]=x*(Math.abs(x)*amount+1)/(Math.abs(x)*amount+1);
+  }
+  return c;
+}
+
+// --- Utility: noise buffer ---
+function noiseBuffer(seconds, color='white'){
+  const len=Math.ceil(AC.sampleRate*seconds);
+  const buf=AC.createBuffer(1,len,AC.sampleRate);
+  const d=buf.getChannelData(0);
+  let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+  for(let i=0;i<len;i++){
+    const wh=Math.random()*2-1;
+    if(color==='pink'){
+      b0=0.99886*b0+wh*0.0555179; b1=0.99332*b1+wh*0.0750759;
+      b2=0.96900*b2+wh*0.1538520; b3=0.86650*b3+wh*0.3104856;
+      b4=0.55000*b4+wh*0.5329522; b5=-0.7616*b5-wh*0.0168980;
+      d[i]=(b0+b1+b2+b3+b4+b5+b6+wh*0.5362)*(1/6.8);
+      b6=wh*0.115926;
+    } else { d[i]=wh; }
+  }
+  return buf;
+}
+
+// ================================================================
+// SOUND: CORRECT — Eerie dark triumph + ghostly choir shimmer
+// ================================================================
+function playCorrect(){
+  const t=AC.currentTime;
+
+  // 1. Ominous LOW DRONE that rises like something waking up
+  const drone=AC.createOscillator(), droneG=AC.createGain();
+  const droneFilter=AC.createBiquadFilter();
+  droneFilter.type='bandpass'; droneFilter.frequency.value=80; droneFilter.Q.value=2;
+  drone.type='sawtooth'; drone.frequency.setValueAtTime(40,t);
+  drone.frequency.exponentialRampToValueAtTime(110,t+1.2);
+  droneG.gain.setValueAtTime(0,t);
+  droneG.gain.linearRampToValueAtTime(0.35,t+0.1);
+  droneG.gain.exponentialRampToValueAtTime(0.001,t+1.6);
+  drone.connect(droneFilter); droneFilter.connect(droneG); droneG.connect(dest());
+  drone.start(t); drone.stop(t+1.7);
+
+  // 2. Ghostly choir — detuned sine cluster (4 voices)
+  [261,263,329,392,523].forEach((f,i)=>{
+    const o=AC.createOscillator(), g=AC.createGain(), rev=AC.createConvolver();
+    // Fake reverb via noise buffer
+    const rb=noiseBuffer(0.5,'pink'); rev.buffer=rb;
+    o.type='sine'; o.frequency.setValueAtTime(f*(1+i*0.003),t+0.2);
+    o.frequency.linearRampToValueAtTime(f*(1-i*0.001),t+1.4);
+    g.gain.setValueAtTime(0,t+0.2);
+    g.gain.linearRampToValueAtTime(0.12,t+0.45);
+    g.gain.setValueAtTime(0.12,t+0.9);
+    g.gain.exponentialRampToValueAtTime(0.001,t+1.5);
+    o.connect(g); g.connect(dest());
+    o.start(t+0.2); o.stop(t+1.6);
+  });
+
+  // 3. Dark chime hits (bell-like — eerie, not joyful)
+  [[220,0],[330,0.15],[165,0.3]].forEach(([f,dt])=>{
+    const o=AC.createOscillator(),g=AC.createGain(),d2=AC.createWaveShaper();
+    d2.curve=makeDistCurve(1);
+    o.type='sine'; o.frequency.setValueAtTime(f,t+dt);
+    o.frequency.exponentialRampToValueAtTime(f*0.5,t+dt+0.8);
+    g.gain.setValueAtTime(0.55,t+dt);
+    g.gain.exponentialRampToValueAtTime(0.001,t+dt+1.0);
+    o.connect(d2); d2.connect(g); g.connect(dest());
+    o.start(t+dt); o.stop(t+dt+1.1);
+  });
+
+  // 4. Whispering wind texture
+  const nSrc=AC.createBufferSource(), nG=AC.createGain(), nFilt=AC.createBiquadFilter();
+  nSrc.buffer=noiseBuffer(1.5,'pink');
+  nFilt.type='bandpass'; nFilt.frequency.value=600; nFilt.Q.value=4;
+  nG.gain.setValueAtTime(0,t+0.5);
+  nG.gain.linearRampToValueAtTime(0.08,t+0.8);
+  nG.gain.exponentialRampToValueAtTime(0.001,t+1.8);
+  nSrc.connect(nFilt); nFilt.connect(nG); nG.connect(dest());
+  nSrc.start(t+0.5); nSrc.stop(t+2.0);
+}
+
+// ================================================================
+// SOUND: WRONG — Full jumpscare stinger: THUD + SCREECH + GROWL
+// ================================================================
+function playWrong(){
+  const t=AC.currentTime;
+
+  // 1. BONE-SHAKING BASS IMPACT — deep sub thud
+  const sub=AC.createOscillator(), subG=AC.createGain();
+  sub.type='sine'; sub.frequency.setValueAtTime(120,t);
+  sub.frequency.exponentialRampToValueAtTime(18,t+0.6);
+  subG.gain.setValueAtTime(0,t); subG.gain.linearRampToValueAtTime(1.5,t+0.01);
+  subG.gain.exponentialRampToValueAtTime(0.001,t+0.65);
+  sub.connect(subG); subG.connect(dest());
+  sub.start(t); sub.stop(t+0.7);
+
+  // 2. DISTORTED BODY — mid crash noise
+  const nSrc=AC.createBufferSource(), nG=AC.createGain(), nDist=AC.createWaveShaper();
+  nSrc.buffer=noiseBuffer(0.4,'white');
+  nDist.curve=makeDistCurve(50);
+  const nFilt=AC.createBiquadFilter(); nFilt.type='lowpass'; nFilt.frequency.value=400;
+  nG.gain.setValueAtTime(0,t); nG.gain.linearRampToValueAtTime(0.8,t+0.005);
+  nG.gain.exponentialRampToValueAtTime(0.001,t+0.4);
+  nSrc.connect(nDist); nDist.connect(nFilt); nFilt.connect(nG); nG.connect(dest());
+  nSrc.start(t); nSrc.stop(t+0.5);
+
+  // 3. HORROR SCREECH — rising then falling, heavily distorted
+  const scr=AC.createOscillator(), scrG=AC.createGain(), scrDist=AC.createWaveShaper();
+  scrDist.curve=makeDistCurve(80);
+  scr.type='sawtooth'; scr.frequency.setValueAtTime(200,t+0.05);
+  scr.frequency.exponentialRampToValueAtTime(2800,t+0.25);
+  scr.frequency.exponentialRampToValueAtTime(180,t+0.8);
+  scrG.gain.setValueAtTime(0,t+0.05); scrG.gain.linearRampToValueAtTime(0.45,t+0.1);
+  scrG.gain.setValueAtTime(0.45,t+0.3); scrG.gain.exponentialRampToValueAtTime(0.001,t+0.9);
+  scr.connect(scrDist); scrDist.connect(scrG); scrG.connect(dest());
+  scr.start(t+0.05); scr.stop(t+1.0);
+
+  // 4. CREATURE GROWL — modulated low rumble
+  const growl=AC.createOscillator(), growlMod=AC.createOscillator();
+  const growlModG=AC.createGain(), growlG=AC.createGain();
+  growlMod.type='sine'; growlMod.frequency.value=7; // 7Hz tremolo
+  growlModG.gain.value=30;
+  growlMod.connect(growlModG); growlModG.connect(growl.frequency);
+  growl.type='sawtooth'; growl.frequency.setValueAtTime(60,t+0.3);
+  growl.frequency.exponentialRampToValueAtTime(25,t+1.4);
+  growlG.gain.setValueAtTime(0,t+0.3); growlG.gain.linearRampToValueAtTime(0.5,t+0.5);
+  growlG.gain.exponentialRampToValueAtTime(0.001,t+1.5);
+  const growlFilt=AC.createBiquadFilter(); growlFilt.type='lowpass'; growlFilt.frequency.value=200;
+  growl.connect(growlFilt); growlFilt.connect(growlG); growlG.connect(dest());
+  growl.start(t+0.3); growl.stop(t+1.6);
+  growlMod.start(t+0.3); growlMod.stop(t+1.6);
+
+  // 5. HIGH METALLIC STING — like a horror movie violin screech
+  [1800,2400,3200].forEach((f,i)=>{
+    const o=AC.createOscillator(), g=AC.createGain(), dist=AC.createWaveShaper();
+    dist.curve=makeDistCurve(30);
+    o.type='sawtooth'; o.frequency.setValueAtTime(f,t+0.08+i*0.04);
+    o.frequency.exponentialRampToValueAtTime(f*0.2,t+0.08+i*0.04+0.5);
+    g.gain.setValueAtTime(0.18,t+0.08+i*0.04);
+    g.gain.exponentialRampToValueAtTime(0.001,t+0.08+i*0.04+0.55);
+    o.connect(dist); dist.connect(g); g.connect(dest());
+    o.start(t+0.08+i*0.04); o.stop(t+0.08+i*0.04+0.6);
+  });
+
+  // 6. SCREEN RUMBLE — low tremolo pulse felt more than heard
+  for(let i=0;i<3;i++){
+    const p=AC.createOscillator(), pg=AC.createGain();
+    p.type='sine'; p.frequency.value=28+i*8;
+    pg.gain.setValueAtTime(0,t+i*0.12);
+    pg.gain.linearRampToValueAtTime(0.6,t+i*0.12+0.04);
+    pg.gain.exponentialRampToValueAtTime(0.001,t+i*0.12+0.18);
+    p.connect(pg); pg.connect(dest());
+    p.start(t+i*0.12); p.stop(t+i*0.12+0.22);
+  }
+}
+
+// ================================================================
+// SOUND: DANGER — Accelerating heartbeat + tension drone
+// ================================================================
+function playDanger(secondsLeft){
+  const t=AC.currentTime;
+  // Double heartbeat — gets louder as time runs out
+  const intensity = Math.max(0.3, 1 - secondsLeft/6);
+  [0, 0.22].forEach(dt=>{
+    const o=AC.createOscillator(), g=AC.createGain();
+    o.type='sine'; o.frequency.setValueAtTime(50,t+dt);
+    o.frequency.exponentialRampToValueAtTime(38,t+dt+0.15);
+    g.gain.setValueAtTime(0,t+dt); g.gain.linearRampToValueAtTime(0.5*intensity,t+dt+0.02);
+    g.gain.exponentialRampToValueAtTime(0.001,t+dt+0.18);
+    o.connect(g); g.connect(dest()); o.start(t+dt); o.stop(t+dt+0.2);
+  });
+  // Tension drone hiss (only when ≤3s)
+  if(secondsLeft<=3){
+    const ns=AC.createBufferSource(), ng=AC.createGain(), nf=AC.createBiquadFilter();
+    ns.buffer=noiseBuffer(0.5,'pink'); nf.type='bandpass'; nf.frequency.value=800; nf.Q.value=6;
+    ng.gain.setValueAtTime(0.06*intensity,t); ng.gain.exponentialRampToValueAtTime(0.001,t+0.5);
+    ns.connect(nf); nf.connect(ng); ng.connect(dest()); ns.start(t); ns.stop(t+0.5);
+  }
+}
+
+// ================================================================
+// SOUND: QUIZ OPEN — Dark ominous intro stinger
+// ================================================================
+function playQuizOpen(){
+  const t=AC.currentTime;
+  // Rising tension swell
+  [55,110,165].forEach((f,i)=>{
+    const o=AC.createOscillator(), g=AC.createGain();
+    o.type='sawtooth'; o.frequency.setValueAtTime(f*0.5,t+i*0.1);
+    o.frequency.exponentialRampToValueAtTime(f,t+i*0.1+0.7);
+    g.gain.setValueAtTime(0,t+i*0.1); g.gain.linearRampToValueAtTime(0.15,t+i*0.1+0.2);
+    g.gain.exponentialRampToValueAtTime(0.001,t+i*0.1+0.9);
+    const filt=AC.createBiquadFilter(); filt.type='lowpass'; filt.frequency.value=300;
+    o.connect(filt); filt.connect(g); g.connect(dest());
+    o.start(t+i*0.1); o.stop(t+i*0.1+1.0);
+  });
+  // Impact thud at end
+  const imp=AC.createOscillator(), impG=AC.createGain();
+  imp.type='sine'; imp.frequency.setValueAtTime(90,t+0.35);
+  imp.frequency.exponentialRampToValueAtTime(20,t+0.85);
+  impG.gain.setValueAtTime(0.8,t+0.35); impG.gain.exponentialRampToValueAtTime(0.001,t+0.9);
+  imp.connect(impG); impG.connect(dest()); imp.start(t+0.35); imp.stop(t+0.95);
+}
+
+function playSound(type, extra){
+  try{
+    if(AC.state==='suspended') AC.resume();
+    if(type==='correct') playCorrect();
+    else if(type==='wrong') playWrong();
+    else if(type==='danger') playDanger(extra||3);
+    else if(type==='open') playQuizOpen();
+  }catch(e){ console.warn('Audio error:',e); }
+}
+
+function unlockAudio(){
+  if(AC.state==='suspended') AC.resume();
+  document.removeEventListener('click',unlockAudio);
+  document.removeEventListener('touchstart',unlockAudio);
+}
+document.addEventListener('click',unlockAudio);
+document.addEventListener('touchstart',unlockAudio);
+
+// ---- HORROR WORD BANKS ----
+const HORROR_CORRECT=[
+  {w:'DECIMATED!',s:'THE BEAST TREMBLES'},
+  {w:'SLAUGHTER!',s:'PREY DESTROYED'},
+  {w:'ANNIHILATE!',s:'NOTHING REMAINS'},
+  {w:'DEVOUR!',s:'YOU FEAST'},
+  {w:'OBLITERATE!',s:'IT FEARS YOU'},
+  {w:'MASSACRE!',s:'BLOOD OF KNOWLEDGE'},
+  {w:'CARNAGE!',s:'THE HUNT IS YOURS'},
+  {w:'DOMINATE!',s:'APEX PREDATOR MOVES'},
+  {w:'EVISCERATE!',s:'THE DARK REWARDS'},
+  {w:'CONQUER!',s:'DARKNESS BOWS'},
+  {w:'SHRED!',s:'FLESH OF IGNORANCE TORN'},
+  {w:'REIGN!',s:'YOUR CROWN IS BLOOD'},
+];
+
+const HORROR_WRONG=[
+  {w:'YOU DIE.',s:'THE PREDATOR FEASTS'},
+  {w:'DEVOURED!',s:'BONES LEFT IN THE DARK'},
+  {w:'CONSUMED!',s:'NOTHING REMAINS OF YOU'},
+  {w:'DRAGGED AWAY!',s:'IT HAS YOU NOW'},
+  {w:'SCREAMING.',s:'NO ONE CAN HEAR'},
+  {w:'PREY.',s:'THAT IS ALL YOU ARE'},
+  {w:'PERISH!',s:'THE SHADOWS SWALLOW YOU'},
+  {w:'TORN APART!',s:'BLOOD ON THE JUNGLE FLOOR'},
+  {w:'SILENCED!',s:'YOUR LAST MISTAKE'},
+  {w:'CLAIMED!',s:'THE DARKNESS OWNS YOU'},
+];
+
+function showHorrorWord(){
+  const hw=HORROR_CORRECT[Math.floor(Math.random()*HORROR_CORRECT.length)];
+  const el=document.getElementById('horror-splash');
+  document.getElementById('horror-word').textContent=hw.w;
+  document.getElementById('horror-sub').textContent=hw.s;
+  el.className='horror-splash show';
+  playSound('correct');
+  setTimeout(()=>{
+    el.classList.add('hide');
+    setTimeout(()=>{el.className='horror-splash';},450);
+  },1000);
+}
+
+function showHorrorWrong(){
+  const hw=HORROR_WRONG[Math.floor(Math.random()*HORROR_WRONG.length)];
+  const el=document.getElementById('horror-splash-wrong');
+  document.getElementById('horror-word-wrong').textContent=hw.w;
+  document.getElementById('horror-sub-wrong').textContent=hw.s;
+  el.className='horror-splash-wrong show';
+  playSound('wrong');
+  setTimeout(()=>{
+    el.classList.add('hide');
+    setTimeout(()=>{el.className='horror-splash-wrong';},500);
+  },1100);
+}
+
+function buildQuizTopics(){
+  const g=document.getElementById('quiz-topics');
+  TOPICS.forEach(t=>{
+    const b=document.createElement('button');
+    b.className='topic-btn';
+    b.innerHTML='<span class="t-icon-big">'+t.icon+'</span>'+t.label;
+    b.addEventListener('click',()=>{
+      document.querySelectorAll('#quiz-topics .topic-btn').forEach(x=>x.classList.remove('selected'));
+      b.classList.add('selected');
+      S.topic=t.id;
+      document.getElementById('start-btn').disabled=false;
+    });
+    g.appendChild(b);
+  });
+}
+
+document.getElementById('start-btn').addEventListener('click',()=>{
+  S.qs=[...QUESTIONS[S.topic]].sort(()=>Math.random()-0.5).slice(0,5);
+  S.qi=0;S.correct=0;S.wrong=0;S.ans=false;
+  setThreat(0);
+  document.getElementById('quiz-modal-overlay').classList.add('open');
+  document.getElementById('qm-play').style.display='block';
+  document.getElementById('qm-result').style.display='none';
+  playSound('open');
+  buildPips();renderQ();
+});
+
+document.getElementById('quiz-modal-close').addEventListener('click',()=>{
+  document.getElementById('quiz-modal-overlay').classList.remove('open');
+  clearInterval(S.timer);
+});
+
+function buildPips(){
+  const wrap=document.getElementById('hunt-pips-modal');
+  wrap.innerHTML='';
+  for(let i=0;i<S.qs.length;i++){
+    const d=document.createElement('div');
+    d.className='hunt-pip'+(i===0?' current':'');
+    d.id='pip-'+i;
+    wrap.appendChild(d);
+  }
+}
+
+function renderQ(){
+  const q=S.qs[S.qi]; S.ans=false;
+  document.getElementById('q-tag-modal').textContent='TARGET '+(S.qi+1)+' / '+S.qs.length;
+  document.getElementById('q-text-modal').textContent=q.q;
+  const g=document.getElementById('opts-grid-modal');
+  g.innerHTML='';
+  ['A','B','C','D'].forEach((L,i)=>{
+    const b=document.createElement('button');
+    b.className='opt-btn';
+    b.innerHTML='<span class="opt-key">'+L+'</span>'+q.options[i];
+    b.addEventListener('click',()=>pickAns(i,b));
+    g.appendChild(b);
+  });
+  document.getElementById('fb-panel-modal').className='fb-panel';
+  document.getElementById('next-btn-modal').className='next-btn';
+  startTimer();
+}
+
+function startTimer(){
+  clearInterval(S.timer);
+  S.tLeft=15;updTimer();
+  S.timer=setInterval(()=>{
+    S.tLeft--;updTimer();
+    if(S.tLeft<=5&&S.tLeft>0) playSound('danger', S.tLeft);
+    if(S.tLeft<=0){clearInterval(S.timer);if(!S.ans){S.ans=true;timeOut();}}
+  },1000);
+}
+function updTimer(){
+  const el=document.getElementById('q-timer-modal');
+  el.textContent='⏱ '+S.tLeft;
+  el.className=S.tLeft<=5?'q-timer danger':'q-timer';
+}
+function timeOut(){
+  const q=S.qs[S.qi];
+  document.querySelectorAll('#opts-grid-modal .opt-btn').forEach((b,i)=>{b.disabled=true;if(i===q.answer)b.classList.add('correct');});
+  showFB(false,"⏰ TIME'S UP — PREDATOR ADVANCES",q.explain);
+  S.streak=0;document.getElementById('streak-display').textContent='0';
+  S.wrong++;
+  setThreat(S.threat+20);flash('red');
+  showPredMsg('IT HEARD YOU','WRONG ANSWER COSTS DISTANCE');
+  showHorrorWrong();
+  document.getElementById('next-btn-modal').classList.add('show');
+  const pip=document.getElementById('pip-'+S.qi);
+  if(pip){pip.className='hunt-pip done-wrong';}
+}
+
+function pickAns(idx,clicked){
+  if(S.ans)return;
+  S.ans=true;clearInterval(S.timer);
+  const q=S.qs[S.qi]; const ok=idx===q.answer;
+  document.querySelectorAll('#opts-grid-modal .opt-btn').forEach((b,i)=>{b.disabled=true;if(i===q.answer)b.classList.add('correct');});
+  const pip=document.getElementById('pip-'+S.qi);
+  if(!ok){
+    clicked.classList.add('wrong');
+    S.streak=0;document.getElementById('streak-display').textContent='0';
+    S.wrong++;
+    showFB(false,'☠ WRONG — THE PREDATOR CLOSES IN',q.explain);
+    setThreat(S.threat+18);flash('red');
+    showPredMsg('IT\'S CLOSER','YOU HESITATED. IT MOVED.');
+    showHorrorWrong();
+    if(pip)pip.className='hunt-pip done-wrong';
+  } else {
+    S.correct++;S.streak++;if(S.streak>S.maxStreak)S.maxStreak=S.streak;
+    let pts=10;
+    if(S.tLeft>=12)pts=20; else if(S.tLeft>=8)pts=15;
+    pts+=S.streak>1?(S.streak-1)*5:0;
+    addScore(pts);
+    showFB(true,'✓ CORRECT — YOU EVADE',q.explain);
+    setThreat(Math.max(0,S.threat-8));
+    flash('green');
+    showHorrorWord();
+    if(S.streak>=3)showPredMsg('ESCAPED!','🔥 '+S.streak+'x STREAK — PREDATOR RETREATS');
+    else toast('💀 +'+pts+' KILLS'+(S.streak>1?' 🔥 '+S.streak+'x STREAK':''));
+    if(pip)pip.className='hunt-pip done-correct';
+  }
+  document.getElementById('next-btn-modal').classList.add('show');
+}
+
+function showFB(ok,title,body){
+  const f=document.getElementById('fb-panel-modal');
+  document.getElementById('fb-title-modal').textContent=title;
+  document.getElementById('fb-body-modal').textContent=body;
+  f.className='fb-panel show '+(ok?'fb-ok':'fb-bad');
+}
+
+document.getElementById('next-btn-modal').addEventListener('click',()=>{
+  S.qi++;
+  if(S.qi<S.qs.length){
+    const pip=document.getElementById('pip-'+S.qi);
+    if(pip)pip.className='hunt-pip current';
+    renderQ();
+  } else showResult();
+});
+
+function showResult(){
+  document.getElementById('qm-play').style.display='none';
+  document.getElementById('qm-result').style.display='block';
+  const total=S.qs.length;
+  const acc=Math.round((S.correct/total)*100);
+  document.getElementById('r-score-modal').textContent=S.score;
+  document.getElementById('rs-c-modal').textContent=S.correct;
+  document.getElementById('rs-w-modal').textContent=S.wrong;
+  document.getElementById('rs-acc-modal').textContent=acc+'%';
+  const emojis=['💀','😰','😤','🐺','🦅','☠'];
+  document.getElementById('r-trophy-modal').textContent=emojis[Math.min(5,Math.floor((acc/100)*5))];
+  const br=document.getElementById('badges-row-modal'); br.innerHTML='';
+  [
+    {l:'🎯 DEAD EYE',e:acc===100},
+    {l:'🔥 APEX PREDATOR',e:S.maxStreak>=3},
+    {l:'⚡ LIGHTNING KILL',e:S.correct===total&&S.score>=total*18},
+    {l:'🐾 TOP SURVIVOR',e:acc>=80},
+  ].forEach(b=>{
+    const el=document.createElement('div');
+    el.className='badge'+(b.e?' earned':'');
+    el.textContent=b.e?b.l:'🔒 '+b.l;
+    br.appendChild(el);
+  });
+}
+
+document.getElementById('play-again-btn-modal').addEventListener('click',()=>{
+  document.getElementById('quiz-modal-overlay').classList.remove('open');
+  S.topic=null;setThreat(0);
+  document.querySelectorAll('#quiz-topics .topic-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('start-btn').disabled=true;
+});
+
+// ================================================================
+// FLASHCARDS
+// ================================================================
+function buildFCTopics(){
+  const g=document.getElementById('fc-topics');
+  TOPICS.forEach(t=>{
+    const b=document.createElement('button');
+    b.className='topic-btn';
+    b.innerHTML='<span class="t-icon-big">'+t.icon+'</span>'+t.label;
+    b.addEventListener('click',()=>{
+      document.querySelectorAll('#fc-topics .topic-btn').forEach(x=>x.classList.remove('selected'));
+      b.classList.add('selected');S.fcTopic=t.id;
+      document.getElementById('fc-start-btn').disabled=false;
+    });
+    g.appendChild(b);
+  });
+}
+document.getElementById('fc-start-btn').addEventListener('click',()=>{
+  S.fcCards=FLASHCARDS[S.fcTopic];S.fcI=0;S.fcSeen=new Set();
+  document.getElementById('fc-picker').style.display='none';
+  document.getElementById('fc-study').style.display='block';
+  renderFC();
+});
+document.getElementById('fc-back').addEventListener('click',()=>{
+  document.getElementById('fc-study').style.display='none';
+  document.getElementById('fc-picker').style.display='block';
+  document.querySelectorAll('#fc-topics .topic-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('fc-start-btn').disabled=true;
+  S.fcTopic=null;
+});
+document.getElementById('fc-scene').addEventListener('click',()=>{
+  document.getElementById('fc-card').classList.toggle('flipped');
+  S.fcSeen.add(S.fcI);buildFCDots();
+});
+document.getElementById('fc-prev').addEventListener('click',()=>{
+  if(S.fcI>0){S.fcI--;document.getElementById('fc-card').classList.remove('flipped');setTimeout(renderFC,80);}
+});
+document.getElementById('fc-next').addEventListener('click',()=>{
+  if(S.fcI<S.fcCards.length-1){
+    const isNew=!S.fcSeen.has(S.fcI+1);
+    S.fcI++;
+    document.getElementById('fc-card').classList.remove('flipped');
+    setTimeout(renderFC,80);
+    if(isNew){addScore(5);toast('📂 +5 XP — INTEL ACQUIRED');}
+  }
+});
+function renderFC(){
+  const c=S.fcCards[S.fcI];
+  document.getElementById('fc-term').textContent=c.term;
+  document.getElementById('fc-hint').textContent=c.hint;
+  document.getElementById('fc-def').textContent=c.def;
+  document.getElementById('fc-eg').textContent=c.eg;
+  document.getElementById('fc-ctr').textContent='CARD '+(S.fcI+1)+' / '+S.fcCards.length;
+  document.getElementById('fc-prev').disabled=S.fcI===0;
+  document.getElementById('fc-next').disabled=S.fcI===S.fcCards.length-1;
+  buildFCDots();
+}
+function buildFCDots(){
+  const w=document.getElementById('fc-dots');w.innerHTML='';
+  S.fcCards.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='fc-dot'+(i===S.fcI?' curr':S.fcSeen.has(i)?' seen':'');
+    w.appendChild(d);
+  });
+}
+
+// ================================================================
+// EXPERIMENTS
+// ================================================================
+function buildExpList(){
+  const l=document.getElementById('exp-list');
+  EXPERIMENTS.forEach(e=>{
+    const c=document.createElement('div');
+    c.className='exp-row';
+    c.innerHTML='<div class="exp-ico">'+e.ico+'</div><div class="exp-inf"><div class="exp-ttl">'+e.ttl+'</div><div class="exp-dsc">'+e.dsc+'</div></div><div class="exp-tag '+e.tag+'">'+e.tl+'</div>';
+    c.addEventListener('click',()=>openExp(e.id));
+    l.appendChild(c);
+  });
+}
+function openExp(id){
+  document.getElementById('exp-list-view').style.display='none';
+  const sv=document.getElementById('exp-sim-view');
+  sv.style.display='block';
+  if(id==='ph'){sv.innerHTML=renderPH();const sl=document.getElementById('ph-sl');if(sl){sl.addEventListener('input',()=>updPH(parseFloat(sl.value)));updPH(7);}}
+  else if(id==='rxn'){sv.innerHTML=renderRxn();abState={a:0,b:0};}
+  else if(id==='fire'){sv.innerHTML=renderFire();combDone=false;}
+  else if(id==='atoms'){sv.innerHTML=renderAtoms();}
+}
+function closeExp(){
+  document.getElementById('exp-sim-view').style.display='none';
+  document.getElementById('exp-list-view').style.display='block';
+}
+
+// ---- PH ----
+function renderPH(){
+  return '<button class="back-lnk" onclick="closeExp()" style="margin-bottom:12px">← BACK TO LAB</button>'+
+  '<div class="sim-wrap">'+
+    '<div class="sim-ttl">☣️ pH FIELD TEST</div>'+
+    '<div class="sim-sub">SLIDE TO SCAN THE ACID/BASE SPECTRUM</div>'+
+    '<div class="sim-visual">'+
+      '<input type="range" class="ph-slider" id="ph-sl" min="0" max="14" value="7" step="0.5"/>'+
+      '<div class="ph-big" id="ph-big" style="color:#22c55e">7.0</div>'+
+      '<div class="ph-lbl" id="ph-lbl" style="color:#22c55e">NEUTRAL — PURE WATER</div>'+
+    '</div>'+
+    '<div class="steps-box">'+
+      '<div class="steps-ttl">▶ FIELD REFERENCE</div>'+
+      '<div class="step-row"><div class="step-n">1</div><div>pH 0–2 — LETHAL ACID (battery acid, stomach acid)</div></div>'+
+      '<div class="step-row"><div class="step-n">3</div><div>pH 3–4 — WEAK ACID (lemon juice, vinegar)</div></div>'+
+      '<div class="step-row"><div class="step-n">5</div><div>pH 5–6 — MILD ACID (coffee, rainwater)</div></div>'+
+      '<div class="step-row"><div class="step-n">7</div><div>pH 7 — NEUTRAL (blood is 7.4 — protect it)</div></div>'+
+      '<div class="step-row"><div class="step-n">9</div><div>pH 8–10 — MILD BASE (baking soda, seawater)</div></div>'+
+      '<div class="step-row"><div class="step-n">12</div><div>pH 12–14 — CORROSIVE BASE (bleach, drain cleaner)</div></div>'+
+    '</div>'+
+  '</div>';
+}
+function updPH(v){
+  const d=document.getElementById('ph-big'),l=document.getElementById('ph-lbl');
+  let c,t;
+  if(v<=2){c='#ef4444';t='LETHAL ACID — CORROSIVE TO TISSUE';}
+  else if(v<=4){c='#f97316';t='WEAK ACID — SOUR, REACTIVE';}
+  else if(v<=6){c='#eab308';t='MILD ACID — COFFEE, RAIN';}
+  else if(v==7){c='#22c55e';t='NEUTRAL — PURE WATER (SAFE)';}
+  else if(v<=9){c='#3b82f6';t='MILD BASE — BAKING SODA';}
+  else if(v<=12){c='#6366f1';t='BASE — SLIPPERY, CORROSIVE';}
+  else{c='#7c3aed';t='STRONG BASE — DISSOLVES FLESH';}
+  d.textContent=v.toFixed(1);d.style.color=c;l.textContent=t;l.style.color=c;
+}
+
+// ---- NEUTRALISATION ----
+let abState={a:0,b:0};
+function renderRxn(){
+  return '<button class="back-lnk" onclick="closeExp()" style="margin-bottom:12px">← BACK TO LAB</button>'+
+  '<div class="sim-wrap">'+
+    '<div class="sim-ttl">🧪 NEUTRALISATION REACTION</div>'+
+    '<div class="sim-sub">DEPLOY ACID AND BASE — OBSERVE THE CHEMICAL STANDOFF</div>'+
+    '<div class="sim-visual">'+
+      '<div class="sim-emoji" id="ab-ico">🧪</div>'+
+      '<div class="sim-rx-txt" id="ab-txt">SELECT REAGENTS BELOW TO BEGIN</div>'+
+    '</div>'+
+    '<div class="sim-btns">'+
+      '<button class="sim-btn" onclick="abAdd(\'a\')">+ HCl ACID</button>'+
+      '<button class="sim-btn" onclick="abAdd(\'b\')">+ NaOH BASE</button>'+
+      '<button class="sim-btn" onclick="abReset()">↺ RESET</button>'+
+    '</div>'+
+    '<div class="sim-log" id="ab-log"><span class="info">[ FIELD LAB READY — DEPLOY REAGENTS ]</span></div>'+
+    '<div class="steps-box" style="margin-top:10px">'+
+      '<div class="steps-ttl">▶ REACTION INTEL</div>'+
+      '<div class="step-row"><div class="step-n">1</div><div>HCl releases H⁺ ions — lowers pH</div></div>'+
+      '<div class="step-row"><div class="step-n">2</div><div>NaOH releases OH⁻ ions — raises pH</div></div>'+
+      '<div class="step-row"><div class="step-n">3</div><div>H⁺ + OH⁻ → H₂O — neutralised</div></div>'+
+      '<div class="step-row"><div class="step-n">4</div><div>Na⁺ + Cl⁻ remain — NaCl (salt) in solution</div></div>'+
+    '</div>'+
+  '</div>';
+}
+function abAdd(t){
+  if(t==='a')abState.a++;else abState.b++;
+  const ic=document.getElementById('ab-ico'),tx=document.getElementById('ab-txt'),lg=document.getElementById('ab-log');
+  if(abState.a>0&&abState.b===0){
+    ic.style.filter='hue-rotate(200deg) drop-shadow(0 0 12px red)';
+    tx.textContent='ACIDIC — pH ≈ '+Math.max(1,4-abState.a);tx.style.color='#ef4444';
+    lg.innerHTML+='<br/><span class="warn">+ HCl → H⁺ ions released. Predatory pH dropping...</span>';
+  }else if(abState.b>0&&abState.a===0){
+    ic.style.filter='hue-rotate(100deg) drop-shadow(0 0 12px blue)';
+    tx.textContent='BASIC — pH ≈ '+Math.min(13,10+abState.b);tx.style.color='#60a5fa';
+    lg.innerHTML+='<br/><span class="info">+ NaOH → OH⁻ ions released. pH climbing...</span>';
+  }else if(abState.a===abState.b){
+    ic.textContent='💧';ic.style.filter='drop-shadow(0 0 14px #39ff14)';
+    tx.textContent='✓ NEUTRALISED — NaCl + H₂O. pH ≈ 7';tx.style.color='#39ff14';
+    lg.innerHTML+='<br/><span class="ok">⚡ H⁺ + OH⁻ → H₂O | Na⁺ + Cl⁻ → NaCl. MISSION COMPLETE.</span>';
+    addScore(15);toast('⚗ NEUTRALISATION ACHIEVED — +15 KILLS');
+  }else if(abState.a>abState.b){
+    tx.textContent='STILL ACIDIC — ADD MORE NaOH';tx.style.color='var(--amber)';
+    lg.innerHTML+='<br/><span class="warn">Excess acid — deploy more NaOH</span>';
+  }else{
+    tx.textContent='STILL BASIC — ADD MORE HCl';tx.style.color='#93c5fd';
+    lg.innerHTML+='<br/><span class="info">Excess base — deploy more HCl</span>';
+  }
+  lg.scrollTop=lg.scrollHeight;
+}
+function abReset(){
+  abState={a:0,b:0};
+  const ic=document.getElementById('ab-ico');
+  if(ic){ic.textContent='🧪';ic.style.filter='drop-shadow(0 0 8px rgba(57,255,20,0.3))';}
+  const tx=document.getElementById('ab-txt');
+  if(tx){tx.textContent='SELECT REAGENTS BELOW TO BEGIN';tx.style.color='var(--venom)';}
+  const lg=document.getElementById('ab-log');
+  if(lg)lg.innerHTML='<span class="info">[ FIELD LAB RESET — READY ]</span>';
+}
+
+// ---- COMBUSTION ----
+let combDone=false;
+function renderFire(){
+  return '<button class="back-lnk" onclick="closeExp()" style="margin-bottom:12px">← BACK TO LAB</button>'+
+  '<div class="sim-wrap">'+
+    '<div class="sim-ttl">🔥 COMBUSTION PROTOCOL</div>'+
+    '<div class="sim-sub">IGNITE METHANE IN OXYGEN — WITNESS THE EXOTHERMIC REACTION</div>'+
+    '<div class="sim-visual">'+
+      '<div class="sim-emoji" id="cm-ico">⚗️</div>'+
+      '<div class="sim-rx-txt" id="cm-txt">CH₄ + 2O₂ → ???</div>'+
+    '</div>'+
+    '<div class="sim-btns">'+
+      '<button class="sim-btn" id="cm-btn" onclick="combIgnite()">🔥 IGNITE</button>'+
+      '<button class="sim-btn" onclick="combReset()">↺ RESET</button>'+
+    '</div>'+
+    '<div class="sim-log" id="cm-log"><span class="info">[ METHANE + OXYGEN LOADED — IGNITION READY ]</span></div>'+
+    '<div class="steps-box" style="margin-top:10px">'+
+      '<div class="steps-ttl">▶ COMBUSTION EQUATION</div>'+
+      '<div class="step-row"><div class="step-n">1</div><div>Reactants: CH₄ (methane) + 2O₂ (oxygen)</div></div>'+
+      '<div class="step-row"><div class="step-n">2</div><div>Ignition: Activation energy supplied by spark/heat</div></div>'+
+      '<div class="step-row"><div class="step-n">3</div><div>Products: CO₂ + 2H₂O — gas and water vapour</div></div>'+
+      '<div class="step-row"><div class="step-n">4</div><div>Energy: Large heat + light release. EXOTHERMIC.</div></div>'+
+    '</div>'+
+  '</div>';
+}
+function combIgnite(){
+  if(combDone)return; combDone=true;
+  const ic=document.getElementById('cm-ico'),tx=document.getElementById('cm-txt'),lg=document.getElementById('cm-log');
+  const btn=document.getElementById('cm-btn');
+  if(btn){btn.classList.add('lit');btn.textContent='🔥 BURNING...';}
+  lg.innerHTML+='<br/><span class="warn">⚡ IGNITION — Temperature spiking...</span>';
+  setTimeout(()=>{
+    ic.textContent='🔥';ic.style.filter='drop-shadow(0 0 20px orange)';
+    tx.textContent='CH₄ + 2O₂ → CO₂ + 2H₂O + ENERGY';tx.style.color='var(--claw)';
+    lg.innerHTML+='<br/><span class="ok">CH₄ burning with O₂...</span>';
+  },800);
+  setTimeout(()=>{
+    ic.textContent='💨';
+    tx.textContent='COMPLETE: CO₂ + H₂O RELEASED';tx.style.color='var(--venom)';
+    lg.innerHTML+='<br/><span class="ok">✓ CO₂ + H₂O produced. Massive energy released. Exothermic confirmed.</span>';
+    lg.scrollTop=lg.scrollHeight;
+    addScore(10);toast('🔥 COMBUSTION COMPLETE — +10 KILLS');
+  },2400);
+}
+function combReset(){
+  combDone=false;
+  const ic=document.getElementById('cm-ico');if(ic){ic.textContent='⚗️';ic.style.filter='';}
+  const tx=document.getElementById('cm-txt');if(tx){tx.textContent='CH₄ + 2O₂ → ???';tx.style.color='var(--venom)';}
+  const lg=document.getElementById('cm-log');if(lg)lg.innerHTML='<span class="info">[ METHANE + OXYGEN LOADED — IGNITION READY ]</span>';
+  const btn=document.getElementById('cm-btn');if(btn){btn.classList.remove('lit');btn.textContent='🔥 IGNITE';}
+}
+
+// ---- ELEMENTS ----
+function renderAtoms(){
+  const cells=MINI_ELS.map((e,i)=>
+    '<div class="el-cell" id="el'+i+'" onclick="pickEl('+i+')">'+
+      '<div class="el-sym">'+e.s+'</div>'+
+      '<div class="el-num">'+e.z+'</div>'+
+      '<div class="el-nm">'+e.n+'</div>'+
+    '</div>'
+  ).join('');
+  return '<button class="back-lnk" onclick="closeExp()" style="margin-bottom:12px">← BACK TO LAB</button>'+
+  '<div class="sim-wrap">'+
+    '<div class="sim-ttl">☢️ ELEMENT SCANNER</div>'+
+    '<div class="sim-sub">SELECT AN ELEMENT TO ACCESS ITS DOSSIER</div>'+
+    '<div class="el-grid">'+cells+'</div>'+
+    '<div class="el-info" id="el-info">[ SELECT AN ELEMENT ABOVE TO SCAN ]</div>'+
+  '</div>';
+}
+function pickEl(i){
+  document.querySelectorAll('.el-cell').forEach(e=>e.classList.remove('active'));
+  const cell=document.getElementById('el'+i);if(cell)cell.classList.add('active');
+  const e=MINI_ELS[i];
+  document.getElementById('el-info').innerHTML=
+    '<strong style="font-size:1rem">'+e.s+' — '+e.n+'</strong><br/>'+
+    '<span style="color:var(--dim);font-size:0.75rem">ATOMIC Z: '+e.z+' · CLASS: '+e.g+'</span><br/><br/>'+
+    '<strong>STATUS:</strong> '+e.d+'<br/><br/>'+
+    '<strong>FIELD USE:</strong> '+e.u;
+  addScore(2);
+}
+
+// ================================================================
+// INIT
+// ================================================================
+buildQuizTopics();
+buildFCTopics();
+buildExpList();
+</script>
+
+
+</body></html>
